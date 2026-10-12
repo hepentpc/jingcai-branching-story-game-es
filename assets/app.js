@@ -88,6 +88,10 @@
       if(video.readyState >= 1){
         try{video.currentTime = 0;}catch(error){/* 尚未能定位至開頭時維持正常播放 */}
       }
+      if(video.readyState < 2 && typeof video.load === "function") {
+        video.preload = "auto"; // 只在進入第一幕時載入，避免封面先播放或浪費流量。
+        video.load();
+      }
       activateFirstVideo();
     }
   }
