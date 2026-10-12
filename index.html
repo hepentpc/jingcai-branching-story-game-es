@@ -3,117 +3,142 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#fff7f5">
-  <meta name="description" content="經彩青春 GO 國小版：在三次故事選擇中，學習月經關懷、破除偏見與尊重。">
-  <title>經彩青春 GO｜月經友善互動故事</title>
+  <meta name="theme-color" content="#fff7f7">
+  <meta name="description" content="經彩青春Do：透過三次選擇，一起學習月經關懷、破除偏見與自然談論。">
+  <title>經彩青春Do｜月經關懷小旅程</title>
   <link rel="stylesheet" href="./assets/style.css">
   <script src="./data/story.js" defer></script>
   <script src="./assets/app.js" defer></script>
 </head>
 <body>
-  <div class="app-shell">
-    <header class="site-header">
-      <a class="brand" href="./" id="brand-link" aria-label="經彩青春 GO，回到首頁">
-        <span class="brand-symbol" aria-hidden="true">GO</span>
-        <span class="brand-name">經彩青春 <b>GO</b></span>
-      </a>
-      <div class="header-actions">
-        <span class="edition-tag">月經友善 · 國小版</span>
-        <button class="header-reset" id="header-reset" type="button" hidden>重新開始 <span aria-hidden="true">↗</span></button>
+<div class="app-shell">
+  <header class="site-header">
+    <a class="brand" id="brand-link" href="./" aria-label="回到經彩青春Do封面">
+      <span class="brand-symbol">國小</span>
+      <span class="brand-name">經彩青春<span class="brand-highlight">Do</span></span>
+    </a>
+    <button class="header-reset" type="button" id="header-reset" hidden>回到封面 <span aria-hidden="true">↗</span></button>
+  </header>
+  <main>
+    <section class="view intro" id="intro" aria-labelledby="intro-title">
+      <div class="intro-content">
+        <p class="eyebrow"><span class="eyebrow-dot" aria-hidden="true"></span>一場關於月經關懷的小旅程</p>
+        <h1 id="intro-title">
+          <span class="intro-question">每一個選擇都能，</span>
+          <span class="intro-line">破除偏見</span>
+          <span class="intro-line emphasis">真誠關懷</span>
+          <span class="intro-line">自然談論</span>
+        </h1>
+        <p class="intro-tip">從生活中的小事開始，學會理解自己，也學會關心別人。</p>
       </div>
-    </header>
-
-    <main id="main-content">
-      <section class="view intro" id="intro">
-        <div class="intro-content">
-          <span class="eyebrow"><span class="eyebrow-dot"></span> 一場關於理解與尊重的小冒險</span>
-          <h1>每一個選擇，<br><span class="accent-highlight">都能讓理解多一步。</span></h1>
-          <p class="intro-lead">樂樂遇到了一件需要幫忙的事。面對她的心情和需要，你會怎麼做？用三次選擇，走出屬於自己的故事。</p>
-          <div class="intro-stats" aria-label="遊戲規模">
-            <span><b>03</b> 次選擇</span>
-            <span class="stat-divider" aria-hidden="true"></span>
-            <span><b>27</b> 種故事結局</span>
-            <span class="stat-divider" aria-hidden="true"></span>
-            <span><b>∞</b> 種學習可能</span>
-          </div>
-          <button class="primary-btn" id="start-btn" type="button">開始故事 <span aria-hidden="true">→</span></button>
-          <p class="intro-note">這不是計分競賽。每條路徑，都有值得發現與反思的地方。</p>
-        </div>
-        <aside class="intro-panel" aria-label="遊戲主題">
-          <div class="panel-kicker">STORY NO. 01 <span aria-hidden="true">✦</span> ABOUT EMPATHY</div>
-          <div class="panel-orbit orbit-one" aria-hidden="true"></div>
-          <div class="panel-orbit orbit-two" aria-hidden="true"></div>
-          <div class="panel-copy">
-            <div class="panel-small">理解，不只一種方式</div>
-            <div class="panel-words">破除偏見<br><span>真誠關懷</span><br>自然談論</div>
-            <span class="panel-bottom">一起練習，對每個人更友善。</span>
-          </div>
-          <span class="panel-stamp" aria-hidden="true">GO!</span>
-        </aside>
-      </section>
-
-      <section class="view game" id="game" hidden aria-labelledby="scene-title">
-        <div class="step-top">
-          <div><div class="small-label">YOUR STORY</div><div class="step-heading">你的故事，正在展開</div></div>
-          <div class="step-fraction" id="step-fraction">01 <span>/ 03</span></div>
-        </div>
-        <div class="progress-track" aria-label="故事進度"><div class="progress-fill" id="progress-fill"></div></div>
-        <div class="stage-labels" aria-hidden="true"><span>故事開始</span><span>深入想想</span><span>做出決定</span></div>
-
-        <div class="scene-layout">
-          <div class="scene-visual">
-            <div class="visual-topline"><span class="visual-tag">SCENE <span id="scene-number">01</span></span><span class="visual-decor" aria-hidden="true">✳</span></div>
-            <div class="image-placeholder" role="img" aria-label="劇情圖片（預留位置，尚未製作）">
-              <span class="placeholder-mark" aria-hidden="true">✦</span>
-              <span>劇情圖片</span>
+      <section class="guide-panel" aria-labelledby="guide-title">
+        <div class="guide-header"><span class="guide-icon" aria-hidden="true">✦</span><div><p class="guide-eyebrow">出發前先看看</p><h2 id="guide-title">遊戲教學</h2></div></div>
+        <div class="guide-screen" aria-live="off">
+          <div class="guide-slide is-active" data-guide-slide="0" aria-hidden="false">
+            <div class="guide-illustration guide-read">
+              <div class="guide-paper" aria-hidden="true"><div class="paper-title"></div><div class="paper-line"></div><div class="paper-line short"></div><div class="paper-line"></div></div>
+              <span class="guide-deco" aria-hidden="true">✧</span>
             </div>
-            <div class="visual-caption"><span class="visual-caption-dot"></span> 想一想：如果你也在現場呢？</div>
+            <h3>第一步：讀一讀</h3>
+            <p>仔細閱讀樂樂遇到的事，想想她現在需要什麼。</p>
           </div>
-
-          <div class="scene-content">
-            <div class="scene-kicker"><span id="scene-chip">情境 01</span><span class="scene-separator" aria-hidden="true"></span><span>月經友善練習</span></div>
-            <h2 id="scene-title" tabindex="-1">突然來了，怎麼辦？</h2>
-            <p class="scene-narrative" id="scene-narrative"></p>
-            <div class="choose-heading"><h3>你會怎麼回應？</h3><span>請選擇一個回答</span></div>
-            <div class="choices" id="choices" aria-label="情境選擇"></div>
-            <p class="keyboard-hint">小提示：也可以按鍵盤 A、B、C 進行選擇。</p>
-          </div>
-        </div>
-        <div class="game-footer">
-          <button class="back-btn" id="back-btn" type="button">← 回到上一個情境</button>
-          <span class="route-trail" id="route-trail" aria-live="polite"></span>
-        </div>
-      </section>
-
-      <section class="view ending" id="ending" hidden aria-labelledby="ending-title">
-        <div class="ending-hero">
-          <div class="ending-icon" aria-hidden="true">✦</div>
-          <span class="eyebrow">故事完成 · REFLECT & GROW</span>
-          <h1 id="ending-title" tabindex="-1">你的選擇，寫成了一段故事。</h1>
-          <p>每一次選擇都讓我們更認識自己。一起看看這條路上，你發現了什麼。</p>
-          <span class="route-badge" id="ending-code">路徑 ABA</span>
-        </div>
-        <div class="ending-body">
-          <section class="summary-section" aria-labelledby="summary-heading">
-            <div class="section-heading"><span class="section-number">01</span><h2 id="summary-heading">這是你的選擇旅程</h2></div>
-            <ol class="journey-steps" id="journey-steps"></ol>
-          </section>
-          <section class="feedback-section" aria-labelledby="feedback-heading">
-            <div class="section-heading"><span class="section-number">02</span><h2 id="feedback-heading">故事給你的回饋</h2></div>
-            <div class="feedback-grid">
-              <article class="feedback-card positive"><div class="feedback-icon" aria-hidden="true">✓</div><h3>做得好的地方</h3><p id="positive-text"></p></article>
-              <article class="feedback-card improve"><div class="feedback-icon" aria-hidden="true">↗</div><h3>可以改進的地方</h3><p id="improve-text"></p></article>
+          <div class="guide-slide" data-guide-slide="1" aria-hidden="true">
+            <div class="guide-illustration guide-choose" aria-hidden="true">
+              <div class="guide-choice">甲</div><div class="guide-choice active">乙 <span>✓</span></div><div class="guide-choice">丙</div>
             </div>
-          </section>
-          <div class="ending-actions">
-            <button class="primary-btn" id="again-btn" type="button">再玩一次 <span aria-hidden="true">→</span></button>
-            <button class="secondary-btn" id="revise-btn" type="button">修改最後的選擇</button>
+            <h3>第二步：選一選</h3>
+            <p>從三個回答中，選出你現在最想說的話。</p>
           </div>
-          <p class="ending-note">也試試其他選擇吧！不同的路徑，可能帶來新的理解。</p>
+          <div class="guide-slide" data-guide-slide="2" aria-hidden="true">
+            <div class="guide-illustration guide-result" aria-hidden="true">
+              <span class="guide-check">✓</span>
+              <div class="guide-result-lines"><span></span><span></span><span></span></div>
+            </div>
+            <h3>第三步：想一想</h3>
+            <p>確認三次選擇後，再看看回饋與過關結果。</p>
+          </div>
         </div>
+        <div class="guide-picks" aria-label="切換遊戲教學">
+          <button class="guide-pick is-active" type="button" data-guide="0" aria-pressed="true">讀一讀</button>
+          <button class="guide-pick" type="button" data-guide="1" aria-pressed="false">選一選</button>
+          <button class="guide-pick" type="button" data-guide="2" aria-pressed="false">想一想</button>
+        </div>
+        <p class="guide-intro">樂樂遇到了一件需要幫忙的事。你會怎麼做？選三次，走出自己的旅程。</p>
+        <div class="intro-stats" aria-label="旅程玩法">
+          <span><strong>3</strong> 次選擇</span>
+          <span class="stat-divider" aria-hidden="true"></span>
+          <span><strong>27</strong> 種結局</span>
+          <span class="stat-divider" aria-hidden="true"></span>
+          <span><strong>∞</strong> 種學習可能</span>
+        </div>
+        <button class="primary-btn" id="start-btn" type="button">開始旅程 <span aria-hidden="true">→</span></button>
       </section>
-    </main>
-    <footer class="site-footer"><span>經彩青春 GO · 月經友善互動故事</span><span>國小版 · 劇本 V2</span></footer>
-  </div>
+    </section>
+    <section class="view game" id="game" hidden aria-labelledby="scene-title">
+      <div class="step-top">
+        <div>
+          <h1 class="step-heading">你的旅程正在展開</h1>
+          <p class="step-desc">仔細閱讀情境，深入想想，最後做出回應。</p>
+        </div>
+        <div class="step-fraction" id="step-fraction">01 <span>/ 03</span></div>
+      </div>
+      <div class="progress-track" aria-label="旅程進度"><div id="progress-fill" class="progress-fill"></div></div>
+      <div class="stage-labels"><span>旅程開始</span><span>深入想想</span><span>做出回應</span></div>
+      <div class="scene-layout">
+        <div class="scene-visual">
+          <div class="visual-topline"><span class="visual-tag">第 <span id="scene-number">1</span> 個情境</span><span class="visual-decor" aria-hidden="true">✳</span></div>
+          <div class="image-frame">
+            <img id="scene-image" class="scene-image" alt="" loading="eager" decoding="async" hidden>
+            <div id="image-placeholder" class="image-placeholder" role="img" aria-label="劇情圖片（尚未放入）"><span class="placeholder-mark" aria-hidden="true">✦</span><span>劇情圖片</span></div>
+          </div>
+          <p class="visual-caption">想一想：如果你也在現場，會怎麼做？</p>
+        </div>
+        <div class="scene-content">
+          <div class="scene-kicker"><span id="scene-chip">情境 1</span><span class="scene-separator" aria-hidden="true"></span><span>月經友善行動</span></div>
+          <h2 id="scene-title" tabindex="-1">突然來了，怎麼辦？</h2>
+          <p id="scene-narrative" class="scene-narrative"></p>
+          <div class="choose-heading"><h3>你會怎麼回答？</h3><span>選一個最想說的話</span></div>
+          <div class="choices" id="choices" aria-label="三個回答"></div>
+          <p class="keyboard-hint">也可以按鍵盤上的甲、乙、丙對應的 A、B、C 鍵選擇。</p>
+        </div>
+      </div>
+      <div class="game-footer">
+        <button id="back-btn" class="back-btn" type="button">← 回到上一個情境</button>
+        <span class="route-trail" id="route-trail" aria-live="polite"></span>
+      </div>
+    </section>
+    <section class="view ending" id="ending" hidden aria-labelledby="ending-title">
+      <div class="ending-hero">
+        <div class="ending-icon" aria-hidden="true">✦</div>
+        <p class="eyebrow">三次選擇完成</p>
+        <h1 id="ending-title" tabindex="-1">你的選擇，走出了一段旅程。</h1>
+        <p id="ending-intro">先看看自己做的三次選擇，想一想，再決定要不要送出。</p>
+      </div>
+      <div class="ending-body">
+        <section aria-labelledby="summary-heading">
+          <div class="section-heading"><span class="section-number">一</span><h2 id="summary-heading">這是你的選擇旅程</h2><span id="ending-code" class="route-badge">路徑 ABB</span></div>
+          <ol class="journey-steps" id="journey-steps"></ol>
+          <div id="confirm-actions" class="confirm-actions">
+            <p>你確定要用這三個選擇，完成這趟旅程嗎？</p>
+            <div class="actions-row">
+              <button id="rethink-btn" class="secondary-btn" type="button">← 回頭再想一次</button>
+              <button id="confirm-btn" class="primary-btn" type="button">確定選擇 <span aria-hidden="true">→</span></button>
+            </div>
+          </div>
+        </section>
+        <section id="feedback-section" class="feedback-section" aria-labelledby="feedback-heading" hidden>
+          <div class="section-heading"><span class="section-number">二</span><h2 id="feedback-heading" tabindex="-1">看看這次旅程的回饋</h2></div>
+          <div class="feedback-grid">
+            <article class="feedback-card positive"><div class="feedback-icon" aria-hidden="true">✓</div><h3>做得好的地方</h3><p id="positive-text"></p></article>
+            <article class="feedback-card improve"><div class="feedback-icon" aria-hidden="true">↗</div><h3>可以改進的地方</h3><p id="improve-text"></p></article>
+            <article class="feedback-card result"><div class="feedback-icon" id="status-icon" aria-hidden="true">★</div><h3>過關狀態</h3><p id="status-text" aria-live="polite"></p></article>
+          </div>
+          <div class="ending-actions"><button class="primary-btn" id="again-btn" type="button">再玩一次，回到封面 <span aria-hidden="true">→</span></button></div>
+        </section>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer"><span>經彩青春Do · 月經關懷小旅程</span><span>國小版</span></footer>
+</div>
 </body>
 </html>
