@@ -13,4 +13,4 @@ jobs:
         with:
           node-version: '22'
       - name: Validate story routes and content
-        run: node --test tests/story.test.cjs
+        run: node --test tests/*.test.cjs
