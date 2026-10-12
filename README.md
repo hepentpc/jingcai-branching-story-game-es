@@ -15,6 +15,15 @@
 - 全介面盡可能使用國小學生能理解的中文，僅名稱保留 Do；內部路徑代碼仍使用英文字母方便程式管理，畫面上維持 A、B、C。
 - 主要文字、選項及按鈕特別提高字級，支援手機、平板與電腦。
 
+## 第一幕的十秒影片
+
+第一幕 S0 改為 MP4 動畫。進入 S0 時載入影片，準備完成便以靜音方式自動播放、每次十秒循環；播放器保留播放／音量控制，可自行開啟聲音。返回封面或進入其他情境時會暫停。原本的 `images/S0.webp` 保留為載入失敗時的替代圖片。
+
+將使用者提供的原始影片 `gemini_generated_video_9aa4eba3.mp4` 上傳到本儲存庫根目錄（與 `index.html` 同一層），不要改檔名：
+https://github.com/kaoelvmpvm/jingcai-branching-story-game-es/upload/main
+
+網頁參照路徑為 `./gemini_generated_video_9aa4eba3.mp4`。只修改網頁檔案不會自動將聊天附件同步到 GitHub，請確認 Repository 中確實已出現 MP4 檔案。
+
 ## 圖片一次安裝（需要專案擁有者上傳）
 
 13 張插圖已另行整理為檔案：jingcai-do-13-images.zip。
