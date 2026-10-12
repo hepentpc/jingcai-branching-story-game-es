@@ -86,7 +86,9 @@ main{flex:1}
 .visual-tag{background:white;border-radius:100px;padding:8px 17px;color:#a93c5f;font-size:16px;font-weight:900}
 .visual-decor{color:var(--pink);font-size:26px}
 .image-frame{width:100%;aspect-ratio:16/9;position:relative;background:#fff8f7;border-radius:20px;overflow:hidden;display:grid;place-items:center;border:1px solid #f0d6df}
-.scene-image{display:block;width:100%;height:100%;object-fit:cover}
+.scene-image,.scene-video{display:block;width:100%;height:100%;object-fit:cover}
+.scene-video{background:#fff7f7}
+.scene-video::-webkit-media-controls-panel{background-color:rgba(255,250,249,.88)}
 .image-placeholder{display:flex;position:absolute;inset:0;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:#c3748a;font-size:26px;font-weight:900;background:linear-gradient(135deg,#fffaf8,#fce8ec);border:2px dashed #dfabb9;border-radius:20px}
 .placeholder-mark{display:grid;place-items:center;width:76px;height:76px;background:#fce2e8;border-radius:24px;font-size:41px}
 .visual-caption{font-size:16px;font-weight:800;color:#966976;margin:17px 2px 0}
