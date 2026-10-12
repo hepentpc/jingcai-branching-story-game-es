@@ -1,144 +1,208 @@
-/* 經彩青春 GO｜三次選擇、完整分支跳轉與個別回饋 */
+/* 經彩青春Do｜三次選擇．先確認、再看回饋 */
 (() => {
   "use strict";
   const story = window.STORY_DATA;
-  const byId = (id) => document.getElementById(id);
+  const find = (id) => document.getElementById(id);
   const dom = {
-    intro: byId("intro"), game: byId("game"), ending: byId("ending"),
-    reset: byId("header-reset"), start: byId("start-btn"),
-    back: byId("back-btn"), again: byId("again-btn"), revise: byId("revise-btn"),
-    sceneTitle: byId("scene-title"), sceneText: byId("scene-narrative"),
-    sceneChip: byId("scene-chip"), sceneNumber: byId("scene-number"),
-    choices: byId("choices"), step: byId("step-fraction"),
-    fill: byId("progress-fill"), trail: byId("route-trail"),
-    endingTitle: byId("ending-title"), code: byId("ending-code"),
-    journey: byId("journey-steps"), positive: byId("positive-text"),
-    improve: byId("improve-text")
+    intro:find("intro"),game:find("game"),ending:find("ending"),
+    reset:find("header-reset"),start:find("start-btn"),back:find("back-btn"),
+    again:find("again-btn"),rethink:find("rethink-btn"),confirm:find("confirm-btn"),
+    sceneTitle:find("scene-title"),sceneText:find("scene-narrative"),
+    sceneChip:find("scene-chip"),sceneNumber:find("scene-number"),
+    sceneImage:find("scene-image"),imagePlaceholder:find("image-placeholder"),
+    choices:find("choices"),step:find("step-fraction"),fill:find("progress-fill"),trail:find("route-trail"),
+    endingTitle:find("ending-title"),endingIntro:find("ending-intro"),
+    code:find("ending-code"),journey:find("journey-steps"),
+    confirmActions:find("confirm-actions"),feedbackSection:find("feedback-section"),feedbackHeading:find("feedback-heading"),
+    positive:find("positive-text"),improve:find("improve-text"),status:find("status-text"),statusIcon:find("status-icon")
   };
   if (!story || !story.nodes || !story.endings) {
-    document.querySelector(".intro-lead").textContent = "遊戲資料無法載入，請確認 data/story.js 是否存在。";
+    const message = document.querySelector(".guide-intro");
+    if (message) message.textContent = "遊戲內容暫時無法讀取，請稍後再試。";
     dom.start.disabled = true;
     return;
   }
 
-  // trail 裡的項目只記錄實際操作，不以對錯或分數評判。
+  const han = {A:"甲",B:"乙",C:"丙"};
+  const toHan = (code) => String(code).replace(/[ABC]/g,(letter)=>han[letter]);
+  const passRoutes = new Set(["AAA","BBB"]); // 暫定規則，可由教學設計者日後修改
   let trail = [];
   let current = story.start;
   let finished = null;
+  let confirmed = false;
 
-  const escapeHtml = (text) => String(text).replace(/[&<>"']/g, (character) => ({
-    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
-  })[character]);
-
+  const escapeHtml = (text) => String(text).replace(/[&<>"']/g,(char)=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  })[char]);
   function show(view) {
-    for (const name of ["intro", "game", "ending"]) dom[name].hidden = name !== view;
+    for(const name of ["intro","game","ending"]) dom[name].hidden = name !== view;
     dom.reset.hidden = view === "intro";
-    window.scrollTo({ top: 0, behavior: "instant" });
+    if(typeof window.scrollTo === "function") window.scrollTo({top:0,behavior:"instant"});
   }
-
-  function focusHeading(element) {
-    if (element && typeof element.focus === "function") element.focus({ preventScroll: true });
+  function focus(element){
+    if (element && typeof element.focus === "function") element.focus({preventScroll:true});
   }
-
-  function welcome() {
+  function cover() {
     trail = [];
     current = story.start;
     finished = null;
+    confirmed = false;
     show("intro");
   }
-
   function start() {
     trail = [];
     current = story.start;
     finished = null;
+    confirmed = false;
     renderScene();
   }
-
+  function changePicture(sceneId) {
+    const image = dom.sceneImage;
+    image.hidden = true;
+    dom.imagePlaceholder.hidden = false;
+    image.alt = "樂樂和同學在「" + story.nodes[sceneId].title + "」情境中的插圖";
+    image.dataset.scene = sceneId;
+    image.onload = () => {
+      if(image.dataset.scene === sceneId && current === sceneId) {
+        image.hidden = false;
+        dom.imagePlaceholder.hidden = true;
+      }
+    };
+    image.onerror = () => {
+      if(image.dataset.scene === sceneId) {
+        image.hidden = true;
+        dom.imagePlaceholder.hidden = false;
+      }
+    };
+    image.src = "./images/" + sceneId + ".webp";
+  }
   function renderScene() {
     const node = story.nodes[current];
     if (!node) throw new Error("找不到情境：" + current);
-    const stage = trail.length + 1;
-    if (stage < 1 || stage > 3) throw new Error("情境步數不正確：" + stage);
-
-    dom.sceneChip.textContent = "情境 " + String(stage).padStart(2, "0");
-    dom.sceneNumber.textContent = String(stage).padStart(2, "0");
+    const stepNumber = trail.length + 1;
+    if(stepNumber < 1 || stepNumber > 3) throw new Error("選擇次數不正確");
+    dom.sceneChip.textContent = "情境 " + stepNumber;
+    dom.sceneNumber.textContent = String(stepNumber);
     dom.sceneTitle.textContent = node.title;
     dom.sceneText.textContent = node.scene;
-    dom.step.innerHTML = String(stage).padStart(2, "0") + " <span>/ 03</span>";
-    dom.fill.style.width = (stage / 3 * 100) + "%";
-    dom.back.disabled = trail.length === 0;
-    dom.trail.textContent = trail.length ? ("目前選擇：" + trail.map((item) => item.letter).join(" → ")) : "故事的第一步";
-    dom.choices.innerHTML = ["A", "B", "C"].map((letter) => {
-      const option = node.choices[letter];
-      return '<button class="option" type="button" data-choice="' + letter + '" aria-label="選項 ' + letter + '：' +
-        escapeHtml(option.label) + '，' + escapeHtml(option.text) + '">' +
-        '<span class="option-letter" aria-hidden="true">' + letter + '</span>' +
-        '<span class="option-body"><strong class="option-label">' + escapeHtml(option.label) + '：</strong>' +
-        '<span class="option-dialogue">' + escapeHtml(option.text) + '</span></span>' +
-        '<span class="option-arrow" aria-hidden="true">↗</span></button>';
+    dom.step.innerHTML = String(stepNumber).padStart(2,"0") + " <span>/ 03</span>";
+    dom.fill.style.width = (stepNumber / 3 * 100) + "%";
+    dom.back.disabled = !trail.length;
+    dom.trail.textContent = trail.length ? "你選了：" + trail.map(item=>han[item.letter]).join(" → ") : "從這裡開始";
+    dom.choices.innerHTML = ["A","B","C"].map((letter)=>{
+      const choice = node.choices[letter];
+      return '<button class="option" type="button" data-choice="'+letter+'" aria-label="選項'+han[letter]+'，'+escapeHtml(choice.label)+'，'+escapeHtml(choice.text)+'">'+
+        '<span class="option-letter" aria-hidden="true">'+han[letter]+'</span>'+
+        '<span class="option-body"><strong class="option-label">'+escapeHtml(choice.label)+'：</strong><span class="option-dialogue">'+escapeHtml(choice.text)+'</span></span>'+
+        '<span class="option-arrow" aria-hidden="true">→</span></button>';
     }).join("");
+    changePicture(current);
     show("game");
-    focusHeading(dom.sceneTitle);
+    focus(dom.sceneTitle);
   }
-
   function choose(letter) {
-    if (dom.game.hidden || !["A", "B", "C"].includes(letter)) return;
+    if(dom.game.hidden || !(letter in han)) return;
     const option = story.nodes[current].choices[letter];
-    if (!option) return;
-    trail.push({ from: current, letter, label: option.label });
-    const target = option.next;
-    if (story.endings[target]) {
-      finished = target;
+    if(!option) return;
+    trail.push({from:current,letter,label:option.label});
+    if(story.endings[option.next]) {
+      finished = option.next;
+      confirmed = false;
       renderEnding();
-    } else if (story.nodes[target]) {
-      current = target;
+    } else if (story.nodes[option.next]) {
+      current = option.next;
       renderScene();
-    } else {
-      throw new Error("找不到跳轉目標：" + target);
-    }
+    } else throw new Error("找不到下一個情境：" + option.next);
   }
-
-  function renderEnding() {
-    const outcome = story.endings[finished];
-    if (!outcome || trail.length !== 3) throw new Error("結局資料或選擇次數有誤");
-    dom.code.textContent = "路徑 " + finished;
-    dom.journey.innerHTML = outcome.steps.map((text) => "<li>" + escapeHtml(text) + "</li>").join("");
-    dom.positive.textContent = outcome.positive;
-    dom.improve.textContent = outcome.improve;
+  function renderEnding(){
+    const ending=story.endings[finished];
+    if(!ending || trail.length!==3) throw new Error("結局內容或選擇次數不正確");
+    dom.code.textContent = "路徑 "+toHan(finished);
+    dom.code.dataset.route = finished;
+    dom.journey.innerHTML = ending.steps.map(text=>"<li>"+escapeHtml(text)+"</li>").join("");
+    dom.positive.textContent = ending.positive;
+    dom.improve.textContent = ending.improve;
+    dom.confirmActions.hidden = confirmed;
+    dom.feedbackSection.hidden = !confirmed;
+    dom.endingIntro.textContent = confirmed ? "看看你做得好的地方，還有哪些地方可以做得更好。" : "先看看自己的三次選擇。想清楚後，再按下確定選擇。";
+    const passed = passRoutes.has(finished);
+    const statusCard = dom.status.closest(".feedback-card");
+    statusCard.classList.toggle("passed", passed);
+    statusCard.classList.toggle("retry", !passed);
+    dom.statusIcon.textContent = passed ? "✓" : "↗";
+    dom.status.textContent = passed ?
+      "恭喜過關！這條路徑目前設定為通關。也記得看看可以改進的地方。" :
+      "這次還沒過關。可以再玩一次，試試不同的回答。";
     show("ending");
-    focusHeading(dom.endingTitle);
+    focus(confirmed ? dom.feedbackHeading : dom.endingTitle);
   }
-
-  function goBack() {
-    if (trail.length === 0) return;
-    const previous = trail.pop();
-    current = previous.from;
-    finished = null;
+  function rethink() {
+    if(!finished || confirmed || trail.length!==3) return;
+    const previous=trail.pop();
+    current=previous.from;
+    finished=null;
+    confirmed=false;
     renderScene();
   }
+  function confirm(){
+    if(!finished || confirmed || trail.length!==3) return;
+    confirmed=true;
+    dom.confirmActions.hidden=true;
+    dom.feedbackSection.hidden=false;
+    dom.endingIntro.textContent="看看你做得好的地方，還有哪些地方可以做得更好。";
+    dom.feedbackSection.scrollIntoView({behavior:"smooth",block:"start"});
+    focus(dom.feedbackHeading);
+  }
 
-  dom.start.addEventListener("click", start);
-  dom.again.addEventListener("click", start);
-  dom.reset.addEventListener("click", welcome);
-  dom.back.addEventListener("click", goBack);
-  dom.revise.addEventListener("click", goBack);
-  byId("brand-link").addEventListener("click", (event) => {
-    event.preventDefault();
-    welcome();
+  // 首頁遊戲教學：自動輪播，亦可手動切換；減少動態模式不自動播放。
+  const guideSlides = Array.from(document.querySelectorAll("[data-guide-slide]"));
+  const guidePicks = Array.from(document.querySelectorAll("[data-guide]"));
+  let guideIndex=0;
+  function setGuide(index){
+    if(index<0 || index>=guideSlides.length) return;
+    guideIndex=index;
+    guideSlides.forEach((slide,i)=>{
+      const active=i===index;
+      slide.classList.toggle("is-active",active);
+      slide.setAttribute("aria-hidden",String(!active));
+      const animated=slide.querySelector(".guide-read");
+      if(animated) animated.classList.toggle("is-animated",active);
+    });
+    guidePicks.forEach((pick,i)=>{
+      pick.classList.toggle("is-active",i===index);
+      pick.setAttribute("aria-pressed",String(i===index));
+    });
+  }
+  guidePicks.forEach((pick)=>pick.addEventListener("click",()=>setGuide(Number(pick.dataset.guide))));
+  setGuide(0);
+  const prefersLessMotion = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  if(!prefersLessMotion && guideSlides.length===3) {
+    window.setInterval(()=>{if(!dom.intro.hidden) setGuide((guideIndex+1)%3)},4500);
+  }
+  dom.start.addEventListener("click",start);
+  dom.reset.addEventListener("click",cover);
+  dom.again.addEventListener("click",cover);
+  dom.back.addEventListener("click",()=>{
+    if(!trail.length)return;
+    const previous=trail.pop();
+    current=previous.from;
+    finished=null;
+    confirmed=false;
+    renderScene();
   });
-  dom.choices.addEventListener("click", (event) => {
-    const button = event.target.closest("button[data-choice]");
-    if (button && dom.choices.contains(button)) choose(button.dataset.choice);
+  dom.rethink.addEventListener("click",rethink);
+  dom.confirm.addEventListener("click",confirm);
+  find("brand-link").addEventListener("click",(event)=>{event.preventDefault();cover()});
+  dom.choices.addEventListener("click",(event)=>{
+    const button=event.target.closest("button[data-choice]");
+    if(button && dom.choices.contains(button)) choose(button.dataset.choice);
   });
-  document.addEventListener("keydown", (event) => {
-    if (dom.game.hidden || event.altKey || event.ctrlKey || event.metaKey || event.repeat) return;
-    const tag = event.target.tagName;
-    if (["INPUT", "TEXTAREA", "SELECT"].includes(tag) || event.target.isContentEditable) return;
-    const letter = event.key.toUpperCase();
-    if (["A", "B", "C"].includes(letter)) {
-      event.preventDefault();
-      choose(letter);
-    }
+  document.addEventListener("keydown",(event)=>{
+    if(dom.game.hidden || event.altKey || event.ctrlKey || event.metaKey || event.repeat)return;
+    const tag=event.target.tagName;
+    if(["INPUT","TEXTAREA","SELECT"].includes(tag) || event.target.isContentEditable)return;
+    const letter=event.key.toUpperCase();
+    if(letter in han){event.preventDefault();choose(letter)}
   });
-  welcome();
+  cover();
 })();
