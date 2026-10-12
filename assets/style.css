@@ -80,7 +80,6 @@ main{flex:1}
 .step-fraction span{color:#a29da5;font-size:20px}
 .progress-track{height:10px;background:#f0e1e5;border-radius:50px;overflow:hidden}
 .progress-fill{height:100%;width:33.333%;background:linear-gradient(90deg,#d44d77,#ed9d84);border-radius:50px;transition:width .25s ease}
-.stage-labels{display:flex;justify-content:space-between;gap:8px;color:#736777;font-size:16px;font-weight:800;margin-top:8px}
 .scene-layout{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);align-items:start;gap:24px;margin-top:30px}
 .scene-visual{background:#faefee;border:1px solid #eedbdf;border-radius:28px;padding:22px;min-width:0}
 .visual-topline{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:15px}
@@ -201,8 +200,7 @@ main{flex:1}
   .step-fraction{font-size:29px}
   .step-fraction span{font-size:17px}
   .step-desc{font-size:17px}
-  .stage-labels{font-size:15px}
-  .scene-layout{gap:18px;margin-top:24px}
+    .scene-layout{gap:18px;margin-top:24px}
   .scene-visual{padding:12px;border-radius:22px}
   .visual-tag{font-size:15px}
   .image-frame{border-radius:15px}
