@@ -1,0 +1,49 @@
+name: 安裝十三張情境圖片
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - jingcai-do-13-images.zip
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  install-images:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 取得程式
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: 確認圖片包
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f jingcai-do-13-images.zip
+          unzip -t jingcai-do-13-images.zip
+      - name: 解壓縮並確認 13 張圖片
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p images
+          unzip -o -j jingcai-do-13-images.zip 'images/*.webp' -d images/
+          for name in S0 A1 AA2 AB2 AC2 B1 BA2 BB2 BC2 C1 CA2 CB2 CC2; do
+            test -s "images/\${name}.webp"
+          done
+          test "$(find images -maxdepth 1 -name '*.webp' -type f | wc -l)" -eq 13
+      - name: 存回 GitHub
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add images/
+          if git diff --staged --quiet; then
+            echo "圖片已存在，沒有檔案需要更新。"
+            exit 0
+          fi
+          git commit -m "assets: install thirteen illustrated story scenes"
+          git push
