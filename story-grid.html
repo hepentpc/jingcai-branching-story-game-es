@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>經彩青春Do｜國小版劇本網格</title>
+<script src="./data/story.js" defer></script>
+<style>
+:root{font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;color:#25354c;background:#fffaf9;font-size:17px}
+*{box-sizing:border-box}body{margin:0;line-height:1.75}main{max-width:1440px;padding:25px clamp(16px,3.4vw,55px) 80px;margin:auto}
+h1{font-size:clamp(30px,3.2vw,45px);line-height:1.35;margin:0 0 8px;letter-spacing:-.02em}
+h2{font-size:clamp(24px,2.6vw,30px);line-height:1.4;margin:0 0 17px}
+h3{font-size:21px;margin:0 0 8px}p{margin:0 0 12px}a{color:#9f3155}button{font:inherit;cursor:pointer;border:0}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;padding:10px 0 20px;border-bottom:1px solid #eadbe0}
+.brand{font-size:19px;font-weight:900;text-decoration:none;color:#263952}.brand span{color:#b23b61}
+.header-actions{display:flex;gap:10px;flex-wrap:wrap}
+.control{border:1px solid #dfcbd0;border-radius:13px;background:white;color:#463847;font-size:15px;font-weight:800;padding:9px 14px}
+.control:hover{border-color:#b83a61;background:#fff0f4}
+.hero{padding:39px 0 28px}.eyebrow{font-size:15px;letter-spacing:.03em;color:#b23d62;font-weight:900}
+.intro{font-size:18px;color:#5b6472;max-width:920px;line-height:1.9}
+.counters{display:flex;flex-wrap:wrap;gap:12px;margin:23px 0 0}
+.stat{display:flex;align-items:center;gap:11px;border:1px solid #f0dfe3;padding:10px 16px;border-radius:15px;background:white;font-size:16px;font-weight:750}
+.stat strong{font-size:27px;color:#b43b61}
+.notice{border-left:5px solid #d45b7c;background:#fff0f3;color:#683f4b;border-radius:0 13px 13px 0;padding:13px 17px;margin:20px 0 33px;font-size:16px;font-weight:700}
+.section{margin-top:45px}.section-header{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.section-header p{color:#718092;font-size:16px}
+.start-box{text-align:center;padding:22px;border-radius:18px;background:#ffeef2;border:1px solid #f0cfd7;margin:4px auto 19px;max-width:560px}
+.node-id{font-size:15px;color:#ae3d63;font-weight:950;letter-spacing:.04em}
+.start-box h3{font-size:23px;margin:4px 0 3px}
+.flow-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.branch{border:1px solid #e7d7db;background:white;border-radius:22px;padding:17px;min-width:0;box-shadow:0 7px 25px #844b5d0d}
+.branch-head{border-radius:15px;padding:17px;color:white;margin-bottom:13px}
+.branch:nth-child(1) .branch-head{background:#bd5b74}
+.branch:nth-child(2) .branch-head{background:#368d84}
+.branch:nth-child(3) .branch-head{background:#7b74a8}
+.branch-head h3{font-size:23px;margin:0;color:white}.branch-head small{font-size:14px;opacity:.95;font-weight:750}
+.subnode{background:#fff9f8;border:1px solid #efdee0;padding:13px;border-radius:15px;margin-top:11px}
+.subnode>strong{display:block;font-size:17px;margin:3px 0 7px}
+.finish-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.end-chip{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:1px;text-align:center;border:1px solid #eadce1;border-radius:11px;padding:8px 4px;background:white;font-size:14px;font-weight:900;color:#6a6371}
+.end-chip.pass{background:#e4f5eb;border-color:#a6dcc0;color:#1b7454}
+.end-chip small{font-size:12px;font-weight:750;color:#8a7280}
+.end-chip.pass small{color:#28795c}
+.node-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:19px}
+.script-card{border-radius:20px;border:1px solid #e6d7db;background:white;padding:22px;min-width:0;break-inside:avoid}
+.script-top{display:flex;align-items:center;gap:11px;flex-wrap:wrap;margin-bottom:11px}
+.script-id{display:inline-block;padding:4px 13px;background:#fde9ee;border-radius:80px;font-weight:950;color:#a83b5b}
+.script-top h3{margin:0;font-size:21px}
+.script-scene{background:#fff9f6;border-left:4px solid #e3a4b5;padding:13px 15px;font-size:17px;line-height:1.92;border-radius:0 12px 12px 0}
+.choices{display:flex;flex-direction:column;gap:9px;margin-top:17px}
+.choice{display:grid;grid-template-columns:36px minmax(0,1fr) auto;gap:10px;align-items:start;border:1px solid #ebdfe1;border-radius:12px;padding:12px}
+.choice-letter{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:#f6e4ec;color:#a8395e;font-weight:950}
+.choice-main{font-size:16px;min-width:0}
+.choice-main strong{color:#ae3c5d}
+.choice-arrow{font-size:14px;font-weight:900;color:#826a78;white-space:nowrap;align-self:center}
+.table-scroll{overflow:auto;border:1px solid #e5d7db;border-radius:18px;background:white}
+table{border-collapse:collapse;width:100%;min-width:980px}
+thead th{position:sticky;top:0;z-index:1;background:#9f4664;color:white;padding:13px 15px;text-align:left;font-size:16px;white-space:nowrap}
+tbody td{font-size:16px;padding:13px 15px;border-top:1px solid #efe5e7;vertical-align:top;line-height:1.85}
+tbody tr:nth-child(even){background:#fff9fa}
+tbody tr:hover{background:#fff1f4}
+.code{font-weight:950;color:#9e3459;white-space:nowrap}
+.status{font-weight:850;white-space:nowrap;color:#866e79}
+.status.pass{color:#1b7855}
+.step-cell{min-width:190px}.feedback-cell{min-width:250px}
+.footer{margin:30px 0 0;color:#7e6b75;font-size:15px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+@media(max-width:1000px){.flow-grid{grid-template-columns:1fr}.node-grid{grid-template-columns:1fr}.branch{max-width:none}}
+@media(max-width:560px){.hero{padding:28px 0 18px}.stat{padding:8px 12px}.stat strong{font-size:24px}.script-card{padding:16px}.choice{grid-template-columns:33px minmax(0,1fr);gap:9px}.choice-arrow{grid-column:2;justify-self:start}.flow-grid{gap:14px}.notice{font-size:15px}}
+@media print{
+  @page{size:A4 landscape;margin:12mm}
+  :root{font-size:12pt}
+  body{background:white}
+  main{max-width:none;padding:0}
+  .header-actions,.control{display:none!important}
+  .hero{padding:15px 0}
+  .section{page-break-before:always;margin-top:15px}
+  .branch,.script-card,.start-box{box-shadow:none}
+  .flow-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+  .branch{padding:9px;border-radius:10px}
+  .branch-head{padding:9px}
+  .subnode{padding:7px;margin-top:7px}
+  .end-chip{font-size:10pt;padding:4px 1px}
+  .end-chip small{font-size:8pt}
+  .node-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .script-card{padding:12px;break-inside:avoid}
+  .script-card h3{font-size:14pt}
+  .script-scene,.choice-main{font-size:10pt}
+  table{min-width:0}
+  th,td{font-size:9pt!important;padding:6px!important}
+  thead{display:table-header-group}
+  tr{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<main>
+<header class="topbar">
+<a class="brand" href="./">經彩青春<span>Do</span></a>
+<div class="header-actions"><a href="./" class="control">前往互動遊戲</a><button class="control" id="download-scenes" type="button">下載情境與選項資料</button><button class="control" id="download-endings" type="button">下載結局與回饋資料</button><button class="control" id="print" type="button">列印／另存檔案</button></div>
+</header>
+<section class="hero">
+<p class="eyebrow">國小版 · 正式劇本資料同步顯示</p>
+<h1>經彩青春Do｜完整劇本網格</h1>
+<p class="intro">依目前遊戲使用的劇本顯示所有情境、ABC 選項、下一個節點、三次選擇的 27 種結局與個別回饋。這份網格直接讀取遊戲資料，日後調整劇本時也會跟著更新。</p>
+<div class="counters" id="counters"></div>
+</section>
+<p class="notice">目前通關規則為測試用設定：AAA、BBB 暫定過關。通關狀態與教育價值判斷應分開看待，請搭配每條路徑的優點與改進回饋檢視。</p>
+<section id="overview" class="section">
+<div class="section-header"><h2>一、完整分支總覽</h2><p>起點 → 第一層選擇 → 第二層選擇 → 第三層選擇 → 結局</p></div>
+<div id="start-node" class="start-box"></div>
+<div id="branch-grid" class="flow-grid"></div>
+</section>
+<section id="all-scenes" class="section">
+<div class="section-header"><h2>二、13 個情境與 ABC 選項</h2><p>保留目前正式劇本對話與四字行為標籤</p></div>
+<div id="node-grid" class="node-grid"></div>
+</section>
+<section id="all-endings" class="section">
+<div class="section-header"><h2>三、27 種結局及回饋</h2><p>路徑摘要、做得好的地方、可以改進的地方、暫定通關狀態</p></div>
+<div class="table-scroll"><table><thead><tr><th>路徑</th><th>三次選擇的結果</th><th>做得好的地方</th><th>可以改進的地方</th><th>過關狀態</th></tr></thead><tbody id="outcome-rows"></tbody></table></div>
+</section>
+<p class="footer">資料來源：本專案 data/story.js，頁面生成時直接讀取。每次匯出會以當時最新的資料為準。</p>
+</main>
+<script>
+window.addEventListener("DOMContentLoaded",()=>{
+  const data=window.STORY_DATA;
+  if(!data){document.getElementById("start-node").textContent="無法讀取劇本資料。";return;}
+  const letters=["A","B","C"];
+  const pass=new Set(data.passRoutes||[]);
+  const esc=v=>String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const order=["S0","A1","AA2","AB2","AC2","B1","BA2","BB2","BC2","C1","CA2","CB2","CC2"];
+  document.getElementById("counters").innerHTML=[
+    [Object.keys(data.nodes).length,"情境節點"],
+    [Object.keys(data.nodes).length*3,"ABC 選項"],
+    [Object.keys(data.endings).length,"結局路徑"],
+    [pass.size,"暫定通關路徑"]
+  ].map(([n,label])=>'<div class="stat"><strong>'+n+'</strong>'+label+'</div>').join("");
+  const root=data.nodes.S0;
+  document.getElementById("start-node").innerHTML='<div class="node-id">起點 · S0</div><h3>'+esc(root.title)+'</h3><p>'+esc(root.scene)+'</p>';
+  document.getElementById("branch-grid").innerHTML=letters.map(a=>{
+    const first=root.choices[a].next;
+    const firstNode=data.nodes[first];
+    return '<article class="branch"><div class="branch-head"><small>第一層 '+a+'｜'+esc(root.choices[a].label)+'</small><h3>'+esc(first)+' · '+esc(firstNode.title)+'</h3></div>'+
+      letters.map(b=>{
+        const second=firstNode.choices[b].next,secondNode=data.nodes[second];
+        return '<div class="subnode"><div class="node-id">第二層 '+b+' → '+esc(second)+'</div><strong>'+esc(secondNode.title)+'</strong><div class="finish-list">'+
+          letters.map(c=>{
+            const choice=secondNode.choices[c];
+            const end=choice.next;
+            return '<div class="end-chip'+(pass.has(end)?' pass':'')+'" title="'+esc(choice.label)+'"><span>'+esc(end)+'</span><small>'+(pass.has(end)?'過關':'未過關')+'</small></div>';
+          }).join("")+
+        '</div></div>';
+      }).join("")+'</article>';
+  }).join("");
+  document.getElementById("node-grid").innerHTML=order.map(id=>{
+    const node=data.nodes[id];
+    if(!node)return "";
+    return '<article class="script-card" id="node-'+esc(id)+'"><div class="script-top"><span class="script-id">'+esc(id)+'</span><h3>'+esc(node.title)+'</h3></div><p class="script-scene">'+esc(node.scene)+'</p><div class="choices">'+letters.map(letter=>{
+      const ch=node.choices[letter];
+      return '<div class="choice"><span class="choice-letter">'+letter+'</span><span class="choice-main"><strong>'+esc(ch.label)+'：</strong>'+esc(ch.text)+'</span><span class="choice-arrow">→ '+esc(ch.next)+'</span></div>';
+    }).join("")+'</div></article>';
+  }).join("");
+  const endings=Object.keys(data.endings).sort();
+  document.getElementById("outcome-rows").innerHTML=endings.map(id=>{
+    const e=data.endings[id];
+    return '<tr><td class="code">'+esc(id)+'</td><td class="step-cell">'+e.steps.map(esc).join(' → ')+'</td><td class="feedback-cell">'+esc(e.positive)+'</td><td class="feedback-cell">'+esc(e.improve)+'</td><td class="status'+(pass.has(id)?' pass':'')+'">'+(pass.has(id)?'過關':'未過關')+'</td></tr>';
+  }).join("");
+  function csvDownload(name,rows){
+    const quote=v=>'"'+String(v??"").replace(/"/g,'""')+'"';
+    const lines=rows.map(row=>row.map(quote).join(",")).join("\r\n");
+    const blob=new Blob(["\uFEFF"+lines],{type:"text/csv;charset=utf-8;"});
+    const uri=URL.createObjectURL(blob);
+    const a=document.createElement("a");a.href=uri;a.download=name;a.style.display="none";
+    document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(uri);
+  }
+  document.getElementById("download-scenes").addEventListener("click",()=>{
+    const rows=[["節點","情境標題","情境內容","選項","四字標籤","原始對話","跳轉節點"]];
+    for(const id of order){
+      const n=data.nodes[id];if(!n)continue;
+      for(const letter of letters){const c=n.choices[letter];rows.push([id,n.title,n.scene,letter,c.label,c.text,c.next]);}
+    }
+    csvDownload("經彩青春Do_13情境39選項.csv",rows);
+  });
+  document.getElementById("download-endings").addEventListener("click",()=>{
+    const rows=[["結局路徑","第一次選擇摘要","第二次選擇摘要","第三次選擇摘要","做得好的地方","可以改進的地方","暫定過關狀態"]];
+    for(const id of endings){const e=data.endings[id];rows.push([id,...e.steps,e.positive,e.improve,pass.has(id)?"過關":"未過關"]);}
+    csvDownload("經彩青春Do_27種結局回饋.csv",rows);
+  });
+  document.getElementById("print").addEventListener("click",()=>window.print());
+});
+</script>
+</body>
+</html>
