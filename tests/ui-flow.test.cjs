@@ -46,6 +46,8 @@ function gameHarness(){
   video.pauseCalls=0;video.playCalls=0;
   video.pause=()=>{video.pauseCalls++};
   video.play=()=>{video.playCalls++;return Promise.resolve()};
+  video.loadCalls=0;
+  video.load=()=>{video.loadCalls++};
   const document={
     handlers:{},
     getElementById(id){assert.ok(elements[id],"missing mocked element "+id);return elements[id]},
@@ -193,7 +195,7 @@ test("S0 改為十秒影片，並保留原圖作為影片未載入時的備援",
   assert.ok(html.includes('id="scene-video"'));
   assert.ok(html.includes('src="./gemini_generated_video_9aa4eba3.mp4"'));
   assert.ok(html.includes('poster="./images/S0.webp"'));
-  assert.ok(html.includes('autoplay muted loop playsinline controls'));
+  assert.ok(html.includes('muted loop playsinline controls preload="none"'));
   const g=gameHarness(),e=g.elements;
   g.click("start-btn");
   assert.equal(e["scene-video"].hidden,true,"影片未準備好時應維持原圖");
