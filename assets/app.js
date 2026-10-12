@@ -25,7 +25,7 @@
 
   const han = {A:"甲",B:"乙",C:"丙"};
   const toHan = (code) => String(code).replace(/[ABC]/g,(letter)=>han[letter]);
-  const passRoutes = new Set(["AAA","BBB"]); // 暫定規則，可由教學設計者日後修改
+  const passRoutes = new Set(story.passRoutes || []); // 暫定規則由劇本資料設定
   let trail = [];
   let current = story.start;
   let finished = null;
