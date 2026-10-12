@@ -140,6 +140,49 @@ test("確認選擇後只能看回饋或回封面，沒有再次修改的按鈕",
   assert.equal(g.elements["confirm-actions"].hidden,true);
 });
 
+
+test("遊戲教學、三個選項與結局路徑皆顯示 ABC",()=>{
+  const html=load("index.html");
+  assert.ok(html.includes('<div class="guide-choice">A</div>'));
+  assert.ok(html.includes('<div class="guide-choice active">B <span>✓</span></div>'));
+  assert.ok(html.includes('<div class="guide-choice">C</div>'));
+  assert.ok(!html.includes('class="guide-choice">甲'));
+  const g=gameHarness(), e=g.elements;
+  g.click("start-btn");
+  for(const letter of ["A","B","C"]){
+    assert.ok(e["choices"].innerHTML.includes('data-choice="'+letter+'"'),"missing choice "+letter);
+    assert.ok(e["choices"].innerHTML.includes('class="option-letter" aria-hidden="true">'+letter+'</span>'),"wrong displayed choice "+letter);
+  }
+  g.choose("A");
+  assert.equal(e["route-trail"].textContent,"你選了：A");
+  g.choose("B");
+  g.choose("C");
+  assert.equal(e["ending-code"].textContent,"路徑 ABC");
+  assert.equal(e["ending-code"].dataset.route,"ABC");
+});
+
+test("重新開始保留回封面行為，並清除上一輪的選擇",()=>{
+  const html=load("index.html");
+  assert.match(html, /id="header-reset" hidden>重新開始/);
+  assert.ok(!html.includes('id="header-reset" hidden>回到封面'));
+  const g=gameHarness(), e=g.elements;
+  g.click("start-btn");
+  g.choose("B");
+  assert.equal(e["scene-title"].textContent,story.nodes.B1.title);
+  g.click("header-reset");
+  assert.equal(e.intro.hidden,false);
+  assert.equal(e.game.hidden,true);
+  assert.equal(e["header-reset"].hidden,true);
+  g.click("start-btn");
+  assert.equal(e["scene-title"].textContent,story.nodes.S0.title);
+  assert.equal(e["route-trail"].textContent,"從這裡開始");
+  ["A","A","A"].forEach(letter=>g.choose(letter));
+  g.click("header-reset");
+  assert.equal(e.intro.hidden,false,"Restart from confirmation must go to cover");
+  g.click("start-btn");
+  assert.equal(e["scene-title"].textContent,story.nodes.S0.title);
+});
+
 test("13 張圖片的檔名和劇本節點一致，可由圖片包補齊",()=>{
   for(const id of Object.keys(story.nodes))assert.match(id,/^(S0|[ABC]1|[ABC]{2}2)$/);
   assert.equal(Object.keys(story.nodes).length,13);
