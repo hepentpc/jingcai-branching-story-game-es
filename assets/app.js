@@ -9,7 +9,7 @@
     again:find("again-btn"),rethink:find("rethink-btn"),confirm:find("confirm-btn"),
     sceneTitle:find("scene-title"),sceneText:find("scene-narrative"),
     sceneChip:find("scene-chip"),sceneNumber:find("scene-number"),
-    sceneImage:find("scene-image"),imagePlaceholder:find("image-placeholder"),
+    sceneImage:find("scene-image"),sceneVideo:find("scene-video"),imagePlaceholder:find("image-placeholder"),
     choices:find("choices"),step:find("step-fraction"),fill:find("progress-fill"),trail:find("route-trail"),
     endingTitle:find("ending-title"),endingIntro:find("ending-intro"),
     code:find("ending-code"),journey:find("journey-steps"),
@@ -37,6 +37,7 @@
   function show(view) {
     for(const name of ["intro","game","ending"]) dom[name].hidden = name !== view;
     dom.reset.hidden = view === "intro";
+    if(view !== "game" && dom.sceneVideo && typeof dom.sceneVideo.pause === "function") dom.sceneVideo.pause();
     if(typeof window.scrollTo === "function") window.scrollTo({top:0,behavior:"instant"});
   }
   function focus(element){
@@ -56,26 +57,59 @@
     confirmed = false;
     renderScene();
   }
-  function changePicture(sceneId) {
+  // 第一幕使用十秒影片；影片讀取失敗時，退回原本的 S0 圖片。
+  // 切換到其他 12 個情境時，只顯示原本的插圖。
+  function showSceneMedia(sceneId) {
     const image = dom.sceneImage;
+    const video = dom.sceneVideo;
+    const firstScene = sceneId === story.start;
+    if(typeof video.pause === "function") video.pause();
+    video.hidden = true;
     image.hidden = true;
     dom.imagePlaceholder.hidden = false;
     image.alt = "樂樂和同學在「" + story.nodes[sceneId].title + "」情境中的插圖";
     image.dataset.scene = sceneId;
     image.onload = () => {
-      if(image.dataset.scene === sceneId && current === sceneId) {
+      if(image.dataset.scene === sceneId && current === sceneId && video.hidden) {
         image.hidden = false;
         dom.imagePlaceholder.hidden = true;
       }
     };
     image.onerror = () => {
-      if(image.dataset.scene === sceneId) {
+      if(image.dataset.scene === sceneId && video.hidden) {
         image.hidden = true;
         dom.imagePlaceholder.hidden = false;
       }
     };
     image.src = "./images/" + sceneId + ".webp";
+    if(firstScene){
+      // 原影片含音訊；自動播放先靜音，學生可用播放器自行開聲音。
+      video.muted = true;
+      if(video.readyState >= 1){
+        try{video.currentTime = 0;}catch(error){/* 尚未能定位至開頭時維持正常播放 */}
+      }
+      activateFirstVideo();
+    }
   }
+  function activateFirstVideo(){
+    const video = dom.sceneVideo;
+    if(current !== story.start || dom.game.hidden || video.readyState < 2) return;
+    video.hidden = false;
+    dom.sceneImage.hidden = true;
+    dom.imagePlaceholder.hidden = true;
+    if(typeof video.play === "function"){
+      const started = video.play();
+      if(started && typeof started.catch === "function") started.catch(()=>{/* 若被瀏覽器阻擋，可按播放鍵 */});
+    }
+  }
+  dom.sceneVideo.addEventListener("loadeddata",activateFirstVideo);
+  dom.sceneVideo.addEventListener("error",()=>{
+    dom.sceneVideo.hidden = true;
+    if(current === story.start && dom.sceneImage.complete && dom.sceneImage.naturalWidth > 0){
+      dom.sceneImage.hidden = false;
+      dom.imagePlaceholder.hidden = true;
+    }
+  });
   function renderScene() {
     const node = story.nodes[current];
     if (!node) throw new Error("找不到情境：" + current);
@@ -96,8 +130,8 @@
         '<span class="option-body"><strong class="option-label">'+escapeHtml(choice.label)+'：</strong><span class="option-dialogue">'+escapeHtml(choice.text)+'</span></span>'+
         '<span class="option-arrow" aria-hidden="true">→</span></button>';
     }).join("");
-    changePicture(current);
     show("game");
+    showSceneMedia(current);
     focus(dom.sceneTitle);
   }
   function choose(letter) {
