@@ -15,7 +15,7 @@ const letters = ["A","B","C"];
 function makeElement() {
   const classes = new Set();
   return {
-    hidden:false,disabled:false,style:{},dataset:{},textContent:"",innerHTML:"",src:"",alt:"",
+    hidden:false,disabled:false,style:{},dataset:{},textContent:"",innerHTML:"",src:"",alt:"",readyState:0,currentTime:0,muted:false,
     handlers:{},attributes:{},isContentEditable:false,
     classList:{
       toggle(name,desired) {if(desired===undefined)desired=!classes.has(name);if(desired)classes.add(name);else classes.delete(name);return desired},
@@ -32,7 +32,7 @@ function makeElement() {
 }
 function gameHarness(){
   const ids=["intro","game","ending","header-reset","start-btn","back-btn","again-btn","rethink-btn","confirm-btn",
-  "scene-title","scene-narrative","scene-chip","scene-number","scene-image","image-placeholder",
+  "scene-title","scene-narrative","scene-chip","scene-number","scene-image","scene-video","image-placeholder",
   "choices","step-fraction","progress-fill","route-trail","ending-title","ending-intro","ending-code",
   "journey-steps","confirm-actions","feedback-section","feedback-heading",
   "positive-text","improve-text","status-text","status-icon","brand-link"];
@@ -42,6 +42,10 @@ function gameHarness(){
     const el=makeElement();el.dataset.guide=String(i);return el;
   });
   elements["status-text"].card=makeElement();
+  const video = elements["scene-video"];
+  video.pauseCalls=0;video.playCalls=0;
+  video.pause=()=>{video.pauseCalls++};
+  video.play=()=>{video.playCalls++;return Promise.resolve()};
   const document={
     handlers:{},
     getElementById(id){assert.ok(elements[id],"missing mocked element "+id);return elements[id]},
@@ -181,6 +185,34 @@ test("重新開始保留回封面行為，並清除上一輪的選擇",()=>{
   assert.equal(e.intro.hidden,false,"Restart from confirmation must go to cover");
   g.click("start-btn");
   assert.equal(e["scene-title"].textContent,story.nodes.S0.title);
+});
+
+
+test("S0 改為十秒影片，並保留原圖作為影片未載入時的備援",()=>{
+  const html=load("index.html");
+  assert.ok(html.includes('id="scene-video"'));
+  assert.ok(html.includes('src="./gemini_generated_video_9aa4eba3.mp4"'));
+  assert.ok(html.includes('poster="./images/S0.webp"'));
+  assert.ok(html.includes('autoplay muted loop playsinline controls'));
+  const g=gameHarness(),e=g.elements;
+  g.click("start-btn");
+  assert.equal(e["scene-video"].hidden,true,"影片未準備好時應維持原圖");
+  assert.equal(e["scene-image"].src,"./images/S0.webp");
+  e["scene-video"].readyState=4;
+  e["scene-video"].handlers.loadeddata();
+  assert.equal(e["scene-video"].hidden,false,"影片就緒後應顯示影片");
+  assert.equal(e["scene-image"].hidden,true,"影片就緒後應隱藏圖片");
+  assert.equal(e["scene-video"].playCalls,1,"第一幕自動播放");
+  g.choose("A");
+  assert.equal(e["scene-video"].hidden,true,"離開第一幕應隱藏影片");
+  assert.ok(e["scene-video"].pauseCalls>=1,"離開第一幕時應停止播放");
+  assert.equal(e["scene-image"].src,"./images/A1.webp","其他情境顯示自己的圖片");
+  g.click("back-btn");
+  assert.equal(e["scene-video"].hidden,false,"回第一幕應重新顯示影片");
+  assert.equal(e["scene-video"].playCalls,2,"回第一幕應重新播放");
+  g.click("header-reset");
+  assert.equal(e.intro.hidden,false);
+  assert.ok(e["scene-video"].pauseCalls>=2,"返回封面應停止影片");
 });
 
 test("13 張圖片的檔名和劇本節點一致，可由圖片包補齊",()=>{
