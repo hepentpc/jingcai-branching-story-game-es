@@ -31,7 +31,7 @@ jobs:
           mkdir -p images
           unzip -o -j jingcai-do-13-images.zip 'images/*.webp' -d images/
           for name in S0 A1 AA2 AB2 AC2 B1 BA2 BB2 BC2 C1 CA2 CB2 CC2; do
-            test -s "images/\${name}.webp"
+            test -s "images/${name}.webp"
           done
           test "$(find images -maxdepth 1 -name '*.webp' -type f | wc -l)" -eq 13
       - name: 存回 GitHub
