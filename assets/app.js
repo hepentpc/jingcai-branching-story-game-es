@@ -23,8 +23,8 @@
     return;
   }
 
-  const han = {A:"甲",B:"乙",C:"丙"};
-  const toHan = (code) => String(code).replace(/[ABC]/g,(letter)=>han[letter]);
+  const displayLabels = {A:"A",B:"B",C:"C"};
+  const displayRoute = (code) => String(code);
   const passRoutes = new Set(story.passRoutes || []); // 暫定規則由劇本資料設定
   let trail = [];
   let current = story.start;
@@ -88,11 +88,11 @@
     dom.step.innerHTML = String(stepNumber).padStart(2,"0") + " <span>/ 03</span>";
     dom.fill.style.width = (stepNumber / 3 * 100) + "%";
     dom.back.disabled = !trail.length;
-    dom.trail.textContent = trail.length ? "你選了：" + trail.map(item=>han[item.letter]).join(" → ") : "從這裡開始";
+    dom.trail.textContent = trail.length ? "你選了：" + trail.map(item=>displayLabels[item.letter]).join(" → ") : "從這裡開始";
     dom.choices.innerHTML = ["A","B","C"].map((letter)=>{
       const choice = node.choices[letter];
-      return '<button class="option" type="button" data-choice="'+letter+'" aria-label="選項'+han[letter]+'，'+escapeHtml(choice.label)+'，'+escapeHtml(choice.text)+'">'+
-        '<span class="option-letter" aria-hidden="true">'+han[letter]+'</span>'+
+      return '<button class="option" type="button" data-choice="'+letter+'" aria-label="選項'+displayLabels[letter]+'，'+escapeHtml(choice.label)+'，'+escapeHtml(choice.text)+'">'+
+        '<span class="option-letter" aria-hidden="true">'+displayLabels[letter]+'</span>'+
         '<span class="option-body"><strong class="option-label">'+escapeHtml(choice.label)+'：</strong><span class="option-dialogue">'+escapeHtml(choice.text)+'</span></span>'+
         '<span class="option-arrow" aria-hidden="true">→</span></button>';
     }).join("");
@@ -101,7 +101,7 @@
     focus(dom.sceneTitle);
   }
   function choose(letter) {
-    if(dom.game.hidden || !(letter in han)) return;
+    if(dom.game.hidden || !(letter in displayLabels)) return;
     const option = story.nodes[current].choices[letter];
     if(!option) return;
     trail.push({from:current,letter,label:option.label});
@@ -117,7 +117,7 @@
   function renderEnding(){
     const ending=story.endings[finished];
     if(!ending || trail.length!==3) throw new Error("結局內容或選擇次數不正確");
-    dom.code.textContent = "路徑 "+toHan(finished);
+    dom.code.textContent = "路徑 "+displayRoute(finished);
     dom.code.dataset.route = finished;
     dom.journey.innerHTML = ending.steps.map(text=>"<li>"+escapeHtml(text)+"</li>").join("");
     dom.positive.textContent = ending.positive;
@@ -202,7 +202,7 @@
     const tag=event.target.tagName;
     if(["INPUT","TEXTAREA","SELECT"].includes(tag) || event.target.isContentEditable)return;
     const letter=event.key.toUpperCase();
-    if(letter in han){event.preventDefault();choose(letter)}
+    if(letter in displayLabels){event.preventDefault();choose(letter)}
   });
   cover();
 })();
