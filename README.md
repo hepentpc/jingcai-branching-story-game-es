@@ -1,58 +1,61 @@
-# 經彩青春 GO｜月經友善分支劇情遊戲
+# 經彩青春Do｜國小月經關懷小旅程
 
-以《經彩青春 GO｜國小版｜月經友善分支遊戲劇本｜網格修正版 V2》為基礎製作的靜態網頁互動遊戲。
+這是依照《國小版分支遊戲劇本網格修正版 V2》製作的互動網頁。學生閱讀情境、完成三次選擇、確認自己的選擇，再查看回饋與過關結果。
 
-學生以三次 A／B／C 選擇完成故事，看到個別結局中的「做得好的地方」與「可以改進的地方」。此活動旨在促進理解、尊重與價值反思，**不使用分數或對錯排名**。
+## 目前版本
 
-## 目前完成
+- 名稱：經彩青春Do。
+- 首頁：左側三個主題「破除偏見、真誠關懷、自然談論」，右側三步驟動畫教學。
+- 情境頁：三次選擇，共 13 個情境節點、39 個四字標籤選項。
+- 圖片：13 個情境的圖檔路徑已設定為 images/節點代碼.webp。
+- 結局頁：先確認三次選擇；按「確定選擇」才看三項回饋；「回頭再想一次」回到第三次選擇。
+- 回饋區：做得好的地方、可以改進的地方、過關狀態。
+- **暫定通關路徑：AAA、BBB。** 這是活動測試設定，不代表其選項在教學價值上最適當；原本的建議回饋仍會如實呈現。
+- 「再玩一次」回到首頁，不直接進入第一個情境。
+- 全介面盡可能使用國小學生能理解的中文，僅名稱保留 Do；內部路徑代碼仍使用英文字母方便程式管理，畫面上顯示甲、乙、丙。
+- 主要文字、選項及按鈕特別提高字級，支援手機、平板與電腦。
 
-- 國小版：13 個情境節點、27 種完整結局、39 個選項。
-- 所有選項採用四個中文字標籤＋原始對話，例如：溫柔關懷：「可以。妳現在需要什麼？我陪妳一起想辦法。」
-- 每個情境保留「劇情圖片」佔位區；目前完全未製作或引用劇情圖片。
-- 完整保留 V2 結局的三段七字總結與雙向回饋。
-- 支援手機與電腦、A／B／C 鍵盤選擇、上一個情境、修改最後的選擇、重新開始。
-- 不需要資料庫、註冊、外部字型或 JavaScript 框架，也不蒐集學生輸入資料。
+## 圖片一次安裝（需要專案擁有者上傳）
 
-## 讓 GitHub Pages 上線
+13 張插圖已另行整理為檔案：jingcai-do-13-images.zip。
 
-1. 開啟本 repository 的 Settings → Pages。
-2. 在 Build and deployment 的 Source 選擇 Deploy from a branch。
-3. Branch 選擇 main，資料夾選擇 /(root)，按 Save。
-4. 等待 GitHub 部署完成，再開啟：
+上傳一次就可以讓程式自動安裝：
 
-   https://kaoelvmpvm.github.io/jingcai-branching-story-game-es/
+1. 從對話下載 **jingcai-do-13-images.zip**（內含 images/S0.webp 等 13 張插圖）。
+2. 開啟本 repository 的 **Add file → Upload files**。
+3. 將 **jingcai-do-13-images.zip** 拖入上傳區，並提交到 **main** 分支的根目錄。請保留這個 ZIP 檔名。
+4. GitHub Actions 的「安裝十三張情境圖片」工作流程會自動解壓縮，將 13 張圖片加入 images/ 資料夾。若儲存庫禁止 Actions 寫入，需至 Settings → Actions → General → Workflow permissions 開啟 Read and write permissions 後重新執行流程。
+5. 在專案的 Actions 頁檢查流程完成，再開啟網站。
 
-> 上述是預期的 GitHub Pages 網址；未在 Settings 啟用或部署尚未完成前，網站可能無法開啟。
+圖檔對應：S0、A1、AA2、AB2、AC2、B1、BA2、BB2、BC2、C1、CA2、CB2、CC2。只有 GitHub 上實際存在 images/*.webp 後，公開網站才會顯示圖片；否則安全地維持「劇情圖片」佔位區，不會顯示破圖。
 
-也可以下載整個 repository，直接開啟根目錄的 index.html 預覽遊戲。
+> GitHub 的文字檔工具無法直接上傳這批二進位圖檔，因此圖檔需由儲存庫擁有者進行上述單次上傳。其餘程式、圖片對應及自動安裝流程均已寫入。
 
-## 專案檔案
+## 開啟網頁
 
-| 路徑 | 用途 |
-| --- | --- |
-| index.html | 首頁、情境與結局畫面 |
-| assets/style.css | 畫面樣式與響應式排版 |
-| assets/app.js | 選擇、跳轉、返回與結局呈現 |
-| data/story.js | 國小版 V2 的 13 個情境、四字標籤及 27 個結局 |
-| tests/story.test.cjs | 驗證所有分支、字數、結局回饋 |
-| .github/workflows/validate.yml | 每次推送後執行自動檢查 |
+GitHub Repository：
+https://github.com/kaoelvmpvm/jingcai-branching-story-game-es
 
-## 後續修改
+如尚未啟用 GitHub Pages，可至 Settings → Pages 選擇 Deploy from a branch，指定 main 與 /(root)。
 
-- 換劇情圖：目前 index.html 的 .image-placeholder 是保留區，日後可用圖片元素替換；目前僅顯示「劇情圖片」。
-- 修改四字標籤：編輯 data/story.js 的 choices.A/B/C.label，每個必須剛好四個中文字。
-- 修改對話：編輯各節點 choices.A/B/C.text；不得無意變更 next 路徑。
-- 修改結局：編輯 endings 中的 steps、positive、improve。
-- 新增其他教育階段：建議各自新增獨立劇本資料，不覆蓋國小 V2。
+預計網站：
+https://kaoelvmpvm.github.io/jingcai-branching-story-game-es/
 
-## 驗證
+## 檔案說明
 
-安裝 Node.js 20 以上版本，在 repository 根目錄執行：
+- index.html：首頁、情境頁、結局確認與回饋版面。
+- assets/style.css：響應式、字級與教學小動畫。
+- assets/app.js：進入遊戲、三次選擇、確認、回頭重選、過關顯示、回到封面、顯示插圖。
+- data/story.js：所有情境、選項、結局與通關設定。
+- images/*.webp：13 張情境插圖，圖片包安裝完成後出現。
+- tests/*.test.cjs：全路徑與介面流程測試。
+- .github/workflows/validate.yml：每次推送自動測試。
+- .github/workflows/install-images.yml：收到圖片包後自動安裝。
 
-    node --test tests/story.test.cjs
+### 本機測試
 
-程式會檢查 13 個情境、27 個結局、39 個四字選項、每條路徑是否能在第三步到達正確結局，以及回饋是否齊全。
+安裝 Node.js 20 以上，在專案根目錄執行：
 
-## 教育主題
+    node --test tests/*.test.cjs
 
-國小版的三條代表性學習路徑為 ABA（破除週期偏見）、BBA（月經關懷）、CAA（月經去汙名化）。遊戲不把這三條設為唯一「正確」結局，讓每一條路徑都能形成學習反思。
+修改通關條件：編輯 data/story.js 的 passRoutes，例如目前為 ["AAA", "BBB"]，其他路徑不會被判定為通關。
