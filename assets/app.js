@@ -129,9 +129,10 @@
     dom.trail.textContent = trail.length ? "你選了：" + trail.map(item=>displayLabels[item.letter]).join(" → ") : "從這裡開始";
     dom.choices.innerHTML = ["A","B","C"].map((letter)=>{
       const choice = node.choices[letter];
-      return '<button class="option" type="button" data-choice="'+letter+'" aria-label="選項'+displayLabels[letter]+'，'+escapeHtml(choice.label)+'，'+escapeHtml(choice.text)+'">'+
+      const optionText = choice.text.replace(/^「|」$/g, "");
+      return '<button class="option" type="button" data-choice="'+letter+'" aria-label="選項'+displayLabels[letter]+'，'+escapeHtml(choice.label)+'，'+escapeHtml(optionText)+'">'+
         '<span class="option-letter" aria-hidden="true">'+displayLabels[letter]+'</span>'+
-        '<span class="option-body"><strong class="option-label">'+escapeHtml(choice.label)+'：</strong><span class="option-dialogue">'+escapeHtml(choice.text)+'</span></span>'+
+        '<span class="option-body"><strong class="option-label">'+escapeHtml(choice.label)+'：</strong><span class="option-dialogue">'+escapeHtml(optionText)+'</span></span>'+
         '<span class="option-arrow" aria-hidden="true">→</span></button>';
     }).join("");
     show("game");
