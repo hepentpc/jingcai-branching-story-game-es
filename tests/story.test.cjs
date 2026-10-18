@@ -13,7 +13,7 @@ const story = sandbox.window.STORY_DATA;
 const nodeIds = Object.keys(story.nodes);
 const outcomeIds = Object.keys(story.endings);
 
-test("保留國小版 V2 的 13 個情境、27 種結局與 39 個選項", () => {
+test("保留國小新版 PDF 的 13 個情境、27 種結局與 39 個選項", () => {
   assert.equal(nodeIds.length, 13);
   assert.equal(outcomeIds.length, 27);
   assert.equal(nodeIds.reduce((sum, id) => sum + Object.keys(story.nodes[id].choices).length, 0), 39);
@@ -52,18 +52,30 @@ test("三次選擇共 27 條路徑，皆精確對應唯一結局", () => {
   assert.equal(found.size, 27);
 });
 
-test("每種結局均有三句各七字摘要及完整雙向回饋", () => {
+test("每種結局均使用沿路三個四字選項標籤及完整雙向回饋", () => {
   for (const id of outcomeIds) {
     const ending = story.endings[id];
     assert.equal(ending.steps.length, 3, id);
-    for (const part of ending.steps) assert.equal([...part].length, 7, id + "：" + part);
+    let location = story.start;
+    const labels = [];
+    for (const letter of id) {
+      const option = story.nodes[location].choices[letter];
+      labels.push(option.label);
+      location = option.next;
+    }
+    assert.deepEqual(Array.from(ending.steps), labels, id + " 必須顯示 PDF 的選項歷程");
+    for (const part of ending.steps) assert.equal([...part].length, 4, id + "：" + part);
     assert.ok(ending.positive.length > 10, id + " 的優點不完整");
     assert.ok(ending.improve.length > 10, id + " 的建議不完整");
   }
 });
 
-test("三條代表性學習路徑保留於劇本", () => {
-  assert.equal(story.featured.ABA, "破除週期偏見");
-  assert.equal(story.featured.BBA, "月經關懷");
-  assert.equal(story.featured.CAA, "月經去汙名化");
+test("以國小劇本 PDF 的兩條成功通關路徑為準", () => {
+  assert.deepEqual(Array.from(story.passRoutes), ["ABA", "BCB"]);
+  assert.equal(story.featured.ABA, "陪同取用");
+  assert.equal(story.featured.BCB, "樂意協助");
+  assert.ok(story.nodes.S0.scene.includes("量很多衛生棉不夠用了"));
+  assert.equal(story.nodes.BC2.choices.B.label, "樂意協助");
+  assert.ok(story.endings.ABA.positive.includes("完美實踐月經平權"));
+  assert.ok(story.endings.BCB.positive.includes("月經平權小超人"));
 });
