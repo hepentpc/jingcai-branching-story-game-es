@@ -183,7 +183,7 @@ window.addEventListener("DOMContentLoaded",()=>{
     csvDownload("經彩青春Do_13情境39選項.csv",rows);
   });
   document.getElementById("download-endings").addEventListener("click",()=>{
-    const rows=[["結局路徑","第一次選擇摘要","第二次選擇摘要","第三次選擇摘要","做得好的地方","可以改進的地方","暫定過關狀態"]];
+    const rows=[["結局路徑","第一次選擇摘要","第二次選擇摘要","第三次選擇摘要","做得好的地方","可以改進的地方","PDF 通關狀態"]];
     for(const id of endings){const e=data.endings[id];rows.push([id,...e.steps,e.positive,e.improve,pass.has(id)?"過關":"未過關"]);}
     csvDownload("經彩青春Do_27種結局回饋.csv",rows);
   });
