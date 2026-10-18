@@ -73,8 +73,8 @@ function gameHarness(){
   return {elements,click,choose,guidePicks,slideElements};
 }
 
-test("通關條件由劇本設定，僅 AAA、BBB 為暫定通關",()=>{
-  assert.deepEqual(Array.from(story.passRoutes),["AAA","BBB"]);
+test("通關條件由劇本設定，僅 ABA、BCB 為 PDF 指定成功通關",()=>{
+  assert.deepEqual(Array.from(story.passRoutes),["ABA","BCB"]);
 });
 
 test("首頁教學可手動切換，開始按鈕帶到情境一",()=>{
@@ -106,8 +106,8 @@ test("27 條完整路徑：先確認選擇、再顯示三區回饋",()=>{
     assert.equal(e["feedback-section"].hidden,false,route);
     assert.equal(e["positive-text"].textContent,story.endings[route].positive,route);
     assert.equal(e["improve-text"].textContent,story.endings[route].improve,route);
-    assert.equal(e["status-text"].textContent.includes("恭喜過關"),route==="AAA" || route==="BBB",route);
-    assert.equal(e["status-text"].card.classList.contains("passed"),route==="AAA" || route==="BBB",route);
+    assert.equal(e["status-text"].textContent.includes("恭喜過關"),route==="ABA" || route==="BCB",route);
+    assert.equal(e["status-text"].card.classList.contains("passed"),route==="ABA" || route==="BCB",route);
     g.click("again-btn");
     assert.equal(e.intro.hidden,false,route+" again must return cover");
     assert.equal(e.game.hidden,true,route);
