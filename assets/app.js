@@ -1,4 +1,4 @@
-/* 經彩青春Do｜三次選擇．先確認、再看回饋 */
+/* 經彩青春Do｜國小版：三次選擇、先確認再回饋、關卡認證 */
 (() => {
   "use strict";
   const story = window.STORY_DATA;
@@ -25,7 +25,8 @@
 
   const displayLabels = {A:"A",B:"B",C:"C"};
   const displayRoute = (code) => String(code);
-  const passRoutes = new Set(story.passRoutes || []); // 暫定規則由劇本資料設定
+  // 保留國小版劇本原有通關條件（目前為 ABA、BCB）。
+  const passRoutes = new Set(story.passRoutes || []);
   let trail = [];
   let current = story.start;
   let finished = null;
@@ -57,8 +58,7 @@
     confirmed = false;
     renderScene();
   }
-  // 第一幕使用十秒影片；影片讀取失敗時，退回原本的 S0 圖片。
-  // 切換到其他 12 個情境時，只顯示原本的插圖。
+  // 第一幕沿用影片、載入失敗時顯示 S0.webp；其他情境繼續使用節點圖片。
   function showSceneMedia(sceneId) {
     const image = dom.sceneImage;
     const video = dom.sceneVideo;
@@ -83,13 +83,12 @@
     };
     image.src = "./images/" + sceneId + ".webp";
     if(firstScene){
-      // 原影片含音訊；自動播放先靜音，學生可用播放器自行開聲音。
       video.muted = true;
       if(video.readyState >= 1){
         try{video.currentTime = 0;}catch(error){/* 尚未能定位至開頭時維持正常播放 */}
       }
       if(video.readyState < 2 && typeof video.load === "function") {
-        video.preload = "auto"; // 只在進入第一幕時載入，避免封面先播放或浪費流量。
+        video.preload = "auto";
         video.load();
       }
       activateFirstVideo();
@@ -164,14 +163,19 @@
     dom.confirmActions.hidden = confirmed;
     dom.feedbackSection.hidden = !confirmed;
     dom.endingIntro.textContent = confirmed ? "看看你做得好的地方，還有哪些地方可以做得更好。" : "先看看自己的三次選擇。想清楚後，再按下確定選擇。";
+
     const passed = passRoutes.has(finished);
     const statusCard = dom.status.closest(".feedback-card");
     statusCard.classList.toggle("passed", passed);
     statusCard.classList.toggle("retry", !passed);
-    dom.statusIcon.textContent = passed ? "✓" : "↗";
+    // 將第三卡改成關卡認證，與「做得好的地方／可以改進的地方」明確區別。
+    const statusHeading = statusCard.querySelector("h3");
+    if(statusHeading) statusHeading.textContent = "關卡認證";
+    dom.statusIcon.textContent = passed ? "★" : "↻";
+    dom.status.style.whiteSpace = "pre-line";
     dom.status.textContent = passed ?
-      "恭喜過關！這條路徑目前設定為通關。也記得看看可以改進的地方。" :
-      "這次還沒過關。可以再玩一次，試試不同的回答。";
+      "恭喜你成功通關！\n獲得【經彩青春Do密碼】2599，意義：愛我久久" :
+      "沒有過關，繼續加油，\n重新開啟另一個旅程，\n獲得通關密碼！";
     show("ending");
     focus(confirmed ? dom.feedbackHeading : dom.endingTitle);
   }
@@ -193,7 +197,6 @@
     focus(dom.feedbackHeading);
   }
 
-  // 首頁遊戲教學：自動輪播，亦可手動切換；減少動態模式不自動播放。
   const guideSlides = Array.from(document.querySelectorAll("[data-guide-slide]"));
   const guidePicks = Array.from(document.querySelectorAll("[data-guide]"));
   let guideIndex=0;
